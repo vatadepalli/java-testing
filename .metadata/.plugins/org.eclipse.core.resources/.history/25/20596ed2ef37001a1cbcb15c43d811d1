@@ -1,0 +1,106 @@
+package org.exam;
+
+import org.openqa.selenium.By;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.chrome.ChromeDriver;
+import org.openqa.selenium.support.ui.Select;
+import org.testng.Assert;
+import org.testng.annotations.AfterClass;
+import org.testng.annotations.AfterMethod;
+import org.testng.annotations.BeforeClass;
+import org.testng.annotations.BeforeMethod;
+import org.testng.annotations.Test;
+
+public class Web2Test {
+	WebDriver driver;
+
+	@BeforeClass
+	public void initDriver() {
+		System.setProperty("webdriver.chrome.driver","C:\\Users\\dac\\Videos\\chromedriver\\chromedriver.exe");
+		driver = new ChromeDriver();
+		System.out.println("init driver");
+	}
+	
+	@AfterClass
+	public void closeDriver() {
+		driver.close();
+		System.out.println("closed driver");
+	}
+
+	@BeforeMethod
+	public void beforeEveryMethod() {
+		System.out.println("before every method");
+	}
+	
+	@AfterMethod
+	public void afterEveryMethod() {
+		System.out.println("after every method");
+	}
+	
+	@Test(description="register functionality", priority=1)
+	public void register() {
+		System.out.println("inside register emp");
+		
+		driver.get("http://localhost:8080/Question/");
+		
+		WebElement name = driver.findElement(By.name("name"));
+		name.sendKeys("XYZ");
+		WebElement password = driver.findElement(By.name("password"));
+		password.sendKeys("XYZ@gmail.com");
+		WebElement email = driver.findElement(By.name("email"));
+		email.sendKeys("XYZ");
+		Select country = new Select(driver.findElement(By.name("country")));
+		country.selectByVisibleText("USA");
+		//WebElement button = driver.findElement(By.xpath("/html/body/form/table/input[4]"));
+		//WebElement button = driver.findElement(By.name("submit"));
+		WebElement button = driver.findElement(By.cssSelector("input[type='submit']"));
+
+		button.click();
+		
+		try {
+			Thread.sleep(1000);
+		}catch(Exception e) {
+		}
+
+		
+		String url = driver.getCurrentUrl();
+		Assert.assertTrue(url.endsWith("/SaveServlet"));
+		
+	}
+	
+	
+	
+	@Test(description="view emps", priority=2)
+	public void view() {
+		System.out.println("inside view emps");
+
+		try {
+			Thread.sleep(1000);
+		}catch(Exception e) {
+			e.printStackTrace();
+		}
+		
+		WebElement view = driver.findElement(By.linkText("view employees"));
+		view.click();	
+		
+	}
+	
+	
+	@Test(description="delete emps", priority=3)
+	public void delete() {
+	
+		System.out.println("inside delete emp");
+
+		try {
+			Thread.sleep(1000);
+		}catch(Exception e) {
+			e.printStackTrace();
+
+		}
+
+		WebElement delete = driver.findElement(By.linkText("delete"));
+		delete.click();
+	}
+	
+}
